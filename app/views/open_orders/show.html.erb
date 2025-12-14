@@ -1,0 +1,392 @@
+<div class="max-w-7xl mx-auto">
+  <!-- Header with Back Button -->
+  <div class="mb-6 flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">Open Order Details</h1>
+      <p class="mt-2 text-sm text-gray-600">Sales Document: <%= @open_order.sales_doc %></p>
+    </div>
+    <%= link_to "← Back to List", open_orders_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50" %>
+  </div>
+
+  <!-- Read-Only Notice -->
+  <div class="mb-6 bg-blue-50 border border-blue-200 rounded-md p-4">
+    <p class="text-sm text-blue-800">
+      <strong>Note:</strong> This data is read-only and synced from the SAP SQL Server. No modifications are possible through this interface.
+    </p>
+  </div>
+
+  <!-- Section 1: Customer Information -->
+  <div class="bg-white shadow rounded-lg mb-6">
+    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+      <h2 class="text-lg font-semibold text-gray-900">Customer Information</h2>
+    </div>
+    <div class="px-6 py-4">
+      <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Customer Name</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.cust_name || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Sold To</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.sold_to || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Ship To</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.ship_to || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Country</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.country || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Customer PO</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.cust_po || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Customer PO Date</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.cust_po_date&.strftime("%Y-%m-%d") || "—" %></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <!-- Section 2: Order Information -->
+  <div class="bg-white shadow rounded-lg mb-6">
+    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+      <h2 class="text-lg font-semibold text-gray-900">Order Information</h2>
+    </div>
+    <div class="px-6 py-4">
+      <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Sales Document</dt>
+          <dd class="mt-1 text-sm text-gray-900 font-semibold"><%= @open_order.sales_doc || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Item Number</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.item_number || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Sales Type</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.sales_type || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">SO Storage Location</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.so_stloc || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Plant</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.plant || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Material</dt>
+          <dd class="mt-1 text-sm text-gray-900 font-semibold"><%= @open_order.material || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Material Description</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.material_description || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Order Date</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.order_date&.strftime("%Y-%m-%d") || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Requested Date</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.requested_date&.strftime("%Y-%m-%d") || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Order Qty</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.order_qty || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Confirm Qty</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.confirm_qty || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">UOM</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.uom || "—" %></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <!-- Section 3: Shipping & Delivery -->
+  <div class="bg-white shadow rounded-lg mb-6">
+    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+      <h2 class="text-lg font-semibold text-gray-900">Shipping & Delivery</h2>
+    </div>
+    <div class="px-6 py-4">
+      <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Shipping Point</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.shipping_point || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Ship To Plant</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.ship_to_plant || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Delivery Number</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.delivery_number || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Delivery Date</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.delivery_date&.strftime("%Y-%m-%d") || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Delivery Status</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.delivery_status || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Pick Qty</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.pick_qty || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Goods Issue Date</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.goods_issue_date&.strftime("%Y-%m-%d") || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Goods Issue Qty</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.goods_issue_qty || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Shipped Qty</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.shipped_qty || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Route</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.route || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Incoterms</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.incoterms || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Tracking Number</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.tracking_number || "—" %></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <!-- Section 4: Inventory & Availability -->
+  <div class="bg-white shadow rounded-lg mb-6">
+    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+      <h2 class="text-lg font-semibold text-gray-900">Inventory & Availability</h2>
+    </div>
+    <div class="px-6 py-4">
+      <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Unrestricted Stock</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.unrestricted_stock || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Allocated Stock</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.allocated_stock || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Available Stock</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.available_stock || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Stock UOM</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.stock_uom || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">In Transit Qty</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.in_transit_qty || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">In Transit Date</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.in_transit_date&.strftime("%Y-%m-%d") || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">MRP Controller</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.mrp_controller || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">ATP Qty</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.atp_qty || "—" %></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <!-- Section 5: Status & Actions -->
+  <div class="bg-white shadow rounded-lg mb-6">
+    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+      <h2 class="text-lg font-semibold text-gray-900">Status & Actions</h2>
+    </div>
+    <div class="px-6 py-4">
+      <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Order Status</dt>
+          <dd class="mt-1">
+            <% if @open_order.order_status.present? %>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                <%= case @open_order.order_status
+                    when /open/i then 'bg-green-100 text-green-800'
+                    when /blocked/i then 'bg-red-100 text-red-800'
+                    when /partial/i then 'bg-yellow-100 text-yellow-800'
+                    when /closed/i then 'bg-gray-100 text-gray-800'
+                    else 'bg-blue-100 text-blue-800'
+                    end %>">
+                <%= @open_order.order_status %>
+              </span>
+            <% else %>
+              <span class="text-sm text-gray-900">—</span>
+            <% end %>
+          </dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Rejection Status</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.rejection_status || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Blocked Status</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.blocked_status || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Created By</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.created_by || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Changed By</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.changed_by || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Changed Date</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.changed_date&.strftime("%Y-%m-%d") || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Billing Block</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.billing_block || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Delivery Block</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.delivery_block || "—" %></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <!-- Section 6: Sales & Service -->
+  <div class="bg-white shadow rounded-lg mb-6">
+    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+      <h2 class="text-lg font-semibold text-gray-900">Sales & Service</h2>
+    </div>
+    <div class="px-6 py-4">
+      <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Sales Organization</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.sales_org || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Distribution Channel</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.distribution_channel || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Division</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.division || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Sales Office</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.sales_office || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Sales Group</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.sales_group || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">CSR Promised Date</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.csr_promised_date&.strftime("%Y-%m-%d") || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">CSR Promised Quantity</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.csr_promised_quantity || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">CSR Reconfirm Date</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.csr_reconfirm_date&.strftime("%Y-%m-%d") || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">CSR Reconfirm Quantity</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.csr_reconfirm_quantity || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">CSR Last Reconfirm Date</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.csr_last_reconfirm_date&.strftime("%Y-%m-%d") || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">CSR Rejection Date</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.csr_rejection_date&.strftime("%Y-%m-%d") || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">CSR Rejection Reason</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.csr_rejection_reason || "—" %></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <!-- Section 7: Additional Details -->
+  <div class="bg-white shadow rounded-lg mb-6">
+    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+      <h2 class="text-lg font-semibold text-gray-900">Additional Details</h2>
+    </div>
+    <div class="px-6 py-4">
+      <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Item Category</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.item_category || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Order Reason</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.order_reason || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Price</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.price || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Currency</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.currency || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Batch Number</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.batch_number || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Serial Number</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.serial_number || "—" %></dd>
+        </div>
+        <div class="md:col-span-2">
+          <dt class="text-sm font-medium text-gray-500">Item Text</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.item_text || "—" %></dd>
+        </div>
+        <div class="md:col-span-2">
+          <dt class="text-sm font-medium text-gray-500">Header Text</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @open_order.header_text || "—" %></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <!-- Timestamps -->
+  <div class="bg-gray-50 rounded-lg p-4 mb-6">
+    <dl class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-gray-600">
+      <div>
+        <dt class="font-medium">Record Created</dt>
+        <dd class="mt-1"><%= @open_order.created_at&.strftime("%Y-%m-%d %H:%M:%S %Z") || "—" %></dd>
+      </div>
+      <div>
+        <dt class="font-medium">Last Updated</dt>
+        <dd class="mt-1"><%= @open_order.updated_at&.strftime("%Y-%m-%d %H:%M:%S %Z") || "—" %></dd>
+      </div>
+    </dl>
+  </div>
+
+  <!-- Footer Actions -->
+  <div class="flex justify-between items-center">
+    <%= link_to "← Back to List", open_orders_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50" %>
+  </div>
+</div>

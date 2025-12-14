@@ -1,0 +1,5 @@
+{
+  "templatesPath": ".specify/templates",
+  "memoryPath": ".specify/memory",
+  "scriptsPath": ".specify/scripts"
+}

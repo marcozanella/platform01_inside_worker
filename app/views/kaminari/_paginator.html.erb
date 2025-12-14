@@ -1,0 +1,26 @@
+<nav role="navigation" aria-label="Pagination Navigation" class="flex items-center justify-between">
+  <div class="flex-1 flex justify-between sm:hidden">
+    <%= prev_page_tag class: "relative inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 border border-gray-300" unless current_page.first? %>
+    <%= next_page_tag class: "ml-3 relative inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 border border-gray-300" unless current_page.last? %>
+  </div>
+  <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+    <div>
+      <%= page_entries_info @open_orders %>
+    </div>
+    <div>
+      <span class="relative z-0 inline-flex shadow-sm rounded-md">
+        <%= first_page_tag unless current_page.first? %>
+        <%= prev_page_tag unless current_page.first? %>
+        <% each_page do |page| %>
+          <% if page.inside_window? %>
+            <%= page_tag page %>
+          <% elsif page.was_truncated? %>
+            <%= gap_tag %>
+          <% end %>
+        <% end %>
+        <%= next_page_tag unless current_page.last? %>
+        <%= last_page_tag unless current_page.last? %>
+      </span>
+    </div>
+  </div>
+</nav>

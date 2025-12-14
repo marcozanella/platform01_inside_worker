@@ -1,0 +1,163 @@
+<div class="px-4 sm:px-6 lg:px-8">
+  <!-- Header with sync status (T019) -->
+  <div class="sm:flex sm:items-center sm:justify-between mb-8">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">Open Orders</h1>
+      <% if @last_sync %>
+        <p class="mt-2 text-sm text-gray-600">
+          Last synced: <%= @last_sync.strftime("%B %d, %Y at %I:%M %p") %>
+        </p>
+      <% end %>
+    </div>
+    
+    <!-- CSV Export Button (T041-T043) -->
+    <div>
+      <%= link_to open_orders_path(format: :csv, search: params[:search], sort: params[:sort], direction: params[:direction]), 
+          class: "inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" do %>
+        <svg class="mr-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        Export to CSV
+      <% end %>
+      <p class="mt-1 text-xs text-gray-500">Exports up to 1,000 records</p>
+    </div>
+  </div>
+
+  <!-- Search form (T016) -->
+  <div class="mb-6">
+    <%= form_with url: open_orders_path, method: :get, class: "flex gap-4", data: { turbo_frame: "open_orders_list" } do |form| %>
+      <div class="flex-1">
+        <%= form.text_field :search, 
+            value: params[:search],
+            placeholder: "Search by customer name, sales doc, or material...",
+            class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-4 py-2 border" %>
+      </div>
+      <%= form.submit "Search", class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer" %>
+      <% if params[:search].present? %>
+        <%= link_to "Clear", open_orders_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <% if @open_orders.any? %>
+    <!-- Table with sortable headers (T013, T015, T017) -->
+    <div class="mt-8 flow-root">
+      <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+          <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-300">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                    <%= link_to "Sales Doc", open_orders_path(sort: "sales_doc", direction: (params[:sort] == "sales_doc" && params[:direction] == "asc" ? "desc" : "asc"), search: params[:search]), class: "group inline-flex" %>
+                    <% if params[:sort] == "sales_doc" %>
+                      <span class="ml-2"><%= params[:direction] == "asc" ? "↑" : "↓" %></span>
+                    <% end %>
+                  </th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    <%= link_to "Customer", open_orders_path(sort: "cust_name", direction: (params[:sort] == "cust_name" && params[:direction] == "asc" ? "desc" : "asc"), search: params[:search]), class: "group inline-flex" %>
+                    <% if params[:sort] == "cust_name" %>
+                      <span class="ml-2"><%= params[:direction] == "asc" ? "↑" : "↓" %></span>
+                    <% end %>
+                  </th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Plant
+                  </th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    <%= link_to "Material", open_orders_path(sort: "material", direction: (params[:sort] == "material" && params[:direction] == "asc" ? "desc" : "asc"), search: params[:search]), class: "group inline-flex" %>
+                    <% if params[:sort] == "material" %>
+                      <span class="ml-2"><%= params[:direction] == "asc" ? "↑" : "↓" %></span>
+                    <% end %>
+                  </th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    <%= link_to "Status", open_orders_path(sort: "order_status", direction: (params[:sort] == "order_status" && params[:direction] == "asc" ? "desc" : "asc"), search: params[:search]), class: "group inline-flex" %>
+                    <% if params[:sort] == "order_status" %>
+                      <span class="ml-2"><%= params[:direction] == "asc" ? "↑" : "↓" %></span>
+                    <% end %>
+                  </th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    <%= link_to "Requested Date", open_orders_path(sort: "requested_date", direction: (params[:sort] == "requested_date" && params[:direction] == "asc" ? "desc" : "asc"), search: params[:search]), class: "group inline-flex" %>
+                    <% if params[:sort] == "requested_date" %>
+                      <span class="ml-2"><%= params[:direction] == "asc" ? "↑" : "↓" %></span>
+                    <% end %>
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200 bg-white">
+                <% @open_orders.each do |order| %>
+                  <tr class="hover:bg-gray-50">
+                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                      <%= link_to order.sales_doc || "—", open_order_path(order), class: "text-blue-600 hover:text-blue-900" %>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <%= order.cust_name || "—" %>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <%= order.plant || "—" %>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <%= order.material || "—" %>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <span class="inline-flex rounded-full px-2 py-1 text-xs font-semibold <%= order.order_status ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' %>">
+                        <%= order.order_status || "—" %>
+                      </span>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <%= order.requested_date&.strftime("%b %d, %Y") || "—" %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination controls (T014, T022) -->
+    <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 mt-4 rounded-lg shadow">
+      <div class="flex flex-1 justify-between sm:hidden">
+        <%= link_to_previous_page @open_orders, "Previous", class: "relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50" %>
+        <%= link_to_next_page @open_orders, "Next", class: "relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50" %>
+      </div>
+      <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+        <div>
+          <p class="text-sm text-gray-700">
+            Showing
+            <span class="font-medium"><%= @open_orders.offset_value + 1 %></span>
+            to
+            <span class="font-medium"><%= [@open_orders.offset_value + @open_orders.length, @open_orders.total_count].min %></span>
+            of
+            <span class="font-medium"><%= @open_orders.total_count %></span>
+            results
+          </p>
+        </div>
+        <div>
+          <%= paginate @open_orders, theme: 'tailwind' %>
+        </div>
+      </div>
+    </div>
+
+  <% else %>
+    <!-- Empty state (T021) -->
+    <div class="text-center py-12">
+      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+      <h3 class="mt-2 text-sm font-medium text-gray-900">No orders found</h3>
+      <p class="mt-1 text-sm text-gray-500">
+        <% if params[:search].present? %>
+          Try adjusting your search criteria.
+        <% else %>
+          There are no open orders in the system yet.
+        <% end %>
+      </p>
+    </div>
+  <% end %>
+
+  <!-- Read-only indicator (T020) -->
+  <div class="mt-4 text-center text-xs text-gray-500">
+    <p>📊 Read-only view • Data synced from SQL Server</p>
+  </div>
+</div>
