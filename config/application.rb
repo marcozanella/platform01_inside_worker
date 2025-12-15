@@ -16,6 +16,9 @@ module Platform01InsideWorker
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
 
+    # Configure Solid Queue to use the queue database
+    config.solid_queue.connects_to = { database: { writing: :queue } }
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
