@@ -3,7 +3,6 @@ class SyncOpenOrdersJob < ApplicationJob
 
   def perform(*args)
     start_time = Time.current
-    Rails.logger.info "[SyncOpenOrdersJob] Sync started at #{start_time}"
 
     # Create job log
     job_log = JobLog.create_with_timestamp!
