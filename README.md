@@ -71,7 +71,41 @@ bin/rails db:seed
 
 ## Features
 
-### SQL Server Data Sync (New!)
+### Job Execution Logging
+
+Track and monitor all background job executions with detailed logs:
+
+- **Automatic Logging**: Every job execution creates a timestamped log entry
+- **Status Tracking**: Jobs transition through `pending` → `processing` → `success`/`error`
+- **Detail Messages**: Captures step-by-step execution progress (connection, fetch, import batches)
+- **Error Capture**: Failed jobs record error messages for troubleshooting
+- **Web Interface**: View all logs at root URL (`/`) with:
+  - Chronological list of job executions
+  - Status badges (Success, Error, Processing, Pending)
+  - Duration display
+  - Click-through to detailed log view
+
+#### Viewing Job Logs
+
+1. Navigate to the root URL: `http://localhost:3000`
+2. See the list of all job executions sorted by most recent
+3. Click "View Details" to see:
+   - Terminal-style log messages with timestamps
+   - Execution summary (start time, end time, duration)
+4. Use navigation buttons to access:
+   - **Open Orders**: View synced order data
+   - **Jobs Monitor**: Solid Queue dashboard
+
+#### Sample Log Details
+
+A successful sync job captures:
+- Job started timestamp
+- SQL Server connection status
+- Records fetched count
+- Import batch progress (Batch 1/4, 2/4, etc.)
+- Final completion message with total records and duration
+
+### SQL Server Data Sync
 
 Automatic background job that syncs OpenOrder data from SAP SQL Server:
 
@@ -246,24 +280,31 @@ As specified in the constitution, future development includes:
 ```
 app/
 ├── controllers/
-│   └── open_orders_controller.rb    # List, detail, CSV export
+│   ├── job_logs_controller.rb        # Job log list and detail views
+│   └── open_orders_controller.rb     # List, detail, CSV export
 ├── models/
-│   └── open_order.rb                 # ActiveRecord model
+│   ├── job_log.rb                    # Job execution log model
+│   ├── job_log_detail.rb             # Individual log messages
+│   └── open_order.rb                 # OpenOrder ActiveRecord model
 ├── jobs/
-│   └── sync_open_orders_job.rb       # SQL Server sync recurring job
+│   └── sync_open_orders_job.rb       # SQL Server sync with logging
 ├── services/
 │   ├── sql_server_connector.rb       # TinyTDS connection management
-│   └── open_orders_importer.rb       # Batch import with column mapping
+│   └── open_orders_importer.rb       # Batch import with logging
 ├── views/
 │   ├── layouts/
 │   │   └── application.html.erb      # Main layout with Tailwind
+│   ├── job_logs/
+│   │   ├── index.html.erb            # Job log list (root page)
+│   │   └── show.html.erb             # Job log detail view
 │   ├── open_orders/
-│   │   ├── index.html.erb            # List view with sync status
-│   │   └── show.html.erb             # Detail view
+│   │   ├── index.html.erb            # Order list view with sync status
+│   │   └── show.html.erb             # Order detail view
 │   ├── shared/
 │   │   └── _sync_status.html.erb     # Sync status indicator partial
 │   └── kaminari/                     # Pagination templates
 ├── helpers/
+│   ├── job_logs_helper.rb            # Status badge formatting
 │   └── open_orders_helper.rb         # Date/quantity/sync formatters
 config/
 ├── routes.rb                         # RESTful routes (index, show)
@@ -313,4 +354,9 @@ This project follows the **Platform01 Inside Worker Constitution**. Key principl
   - Technical Research: `research.md`
   - Column Mapping: `data-model.md`
   - Setup & Troubleshooting: `quickstart.md`
+  - Implementation Tasks: `tasks.md`
+- **Feature 003** - Job Execution Logging: `specs/003-job-log/`
+  - Data Model: `data-model.md`
+  - Technical Research: `research.md`
+  - Quick Start Guide: `quickstart.md`
   - Implementation Tasks: `tasks.md`

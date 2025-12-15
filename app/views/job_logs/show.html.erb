@@ -1,0 +1,56 @@
+<div class="px-4 sm:px-6 lg:px-8">
+  <!-- Header -->
+  <div class="mb-8">
+    <%= link_to root_path, class: "text-sm text-blue-600 hover:text-blue-900" do %>
+      &larr; Back to Logs
+    <% end %>
+
+    <div class="mt-4 sm:flex sm:items-center sm:justify-between">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">Job Execution: <%= @job_log.name %></h1>
+        <p class="mt-2 text-sm text-gray-700">
+          Started: <%= @job_log.created_at.strftime("%B %d, %Y at %I:%M:%S %p") %>
+        </p>
+      </div>
+
+      <div class="mt-4 sm:mt-0">
+        <%= status_badge(@job_log.status) %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Log details -->
+  <% if @job_log_details.any? %>
+    <div class="bg-gray-900 rounded-lg p-6 font-mono text-sm text-gray-100 overflow-x-auto">
+      <% @job_log_details.each do |detail| %>
+        <div class="mb-2">
+          <span class="text-gray-400"><%= detail.created_at.strftime("%H:%M:%S.%L") %></span>
+          <span class="ml-4"><%= detail.message %></span>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center py-12 bg-gray-50 rounded-lg">
+      <p class="text-gray-500">No log details recorded yet.</p>
+    </div>
+  <% end %>
+
+  <!-- Summary -->
+  <div class="mt-8 bg-white rounded-lg shadow p-6">
+    <h2 class="text-lg font-semibold text-gray-900 mb-4">Execution Summary</h2>
+    <dl class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div>
+        <dt class="text-sm font-medium text-gray-500">Started At</dt>
+        <dd class="mt-1 text-sm text-gray-900"><%= @job_log.created_at.strftime("%I:%M:%S %p") %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-gray-500">Completed At</dt>
+        <dd class="mt-1 text-sm text-gray-900"><%= @job_log.updated_at.strftime("%I:%M:%S %p") %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-gray-500">Duration</dt>
+        <dd class="mt-1 text-sm text-gray-900"><%= distance_of_time_in_words(@job_log.created_at, @job_log.updated_at) %></dd>
+      </div>
+    </dl>
+  </div>
+</div>

@@ -3,6 +3,8 @@
 Auto-generated from all feature plans. Last updated: 2025-12-14
 
 ## Active Technologies
+- Ruby 3.3.5 / Rails 8.1.1 (per constitution) + Standard Rails 8 stack (Solid Queue, Tailwind CSS) - no additional gems required (003-job-log)
+- SQLite3 (primary database for JobLog/JobLogDetail models) - per constitution (003-job-log)
 
 - Ruby 3.3.5 / Rails 8.1.1 (per constitution) (002-sqlserver-sync-worker)
 
@@ -22,6 +24,7 @@ tests/
 Ruby 3.3.5 / Rails 8.1.1 (per constitution): Follow standard conventions
 
 ## Recent Changes
+- 003-job-log: Added Ruby 3.3.5 / Rails 8.1.1 (per constitution) + Standard Rails 8 stack (Solid Queue, Tailwind CSS) - no additional gems required
 
 - 002-sqlserver-sync-worker: Added Ruby 3.3.5 / Rails 8.1.1 (per constitution)
 

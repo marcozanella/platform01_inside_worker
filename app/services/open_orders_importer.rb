@@ -116,11 +116,16 @@ class OpenOrdersImporter
 
   # Import records with batch processing and transaction safety
   # Returns the number of records imported
-  def self.import(sql_rows)
+  # @param sql_rows [Array] Array of SQL row hashes to import
+  # @param job_log [JobLog, nil] Optional JobLog instance for recording import progress
+  def self.import(sql_rows, job_log = nil)
     puts "Entering the Service Object OpenOrdersImporter.import method"
     return 0 if sql_rows.empty?
 
     record_count = 0
+    total_batches = (sql_rows.size.to_f / BATCH_SIZE).ceil
+
+    job_log&.add_detail("Importing records in batches of #{BATCH_SIZE}...")
 
     OpenOrder.transaction do
       # Delete all existing records (only after successful fetch)
@@ -128,11 +133,12 @@ class OpenOrdersImporter
       OpenOrder.delete_all
 
       # Process in batches
-      sql_rows.each_slice(BATCH_SIZE) do |batch|
+      sql_rows.each_slice(BATCH_SIZE).with_index(1) do |batch, batch_num|
         mapped_records = batch.map { |row| map_row(row) }
         OpenOrder.insert_all(mapped_records, returning: false)
         record_count += batch.size
         puts "[OpenOrdersImporter] Imported batch of #{batch.size} records (total: #{record_count})"
+        job_log&.add_detail("Batch #{batch_num}/#{total_batches} imported (#{batch.size} records)")
       end
     end
 

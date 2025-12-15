@@ -9,15 +9,13 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+  # Job logs as root (read-only: index and show only)
+  root "job_logs#index"
+  resources :job_logs, only: [ :index, :show ]
 
   # OpenOrder routes (read-only: index and show only)
   resources :open_orders, only: [ :index, :show ]
 
   # Mission Control - Jobs dashboard for Solid Queue
   mount MissionControl::Jobs::Engine, at: "/jobs"
-
-  # Set root to open_orders index
-  root "open_orders#index"
 end

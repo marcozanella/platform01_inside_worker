@@ -10,7 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_14_105334) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_15_120359) do
+  create_table "job_log_details", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "job_log_id", null: false
+    t.text "message", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_job_log_details_on_created_at"
+    t.index ["job_log_id"], name: "index_job_log_details_on_job_log_id"
+  end
+
+  create_table "job_logs", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_job_logs_on_created_at"
+    t.index ["name"], name: "index_job_logs_on_name", unique: true
+    t.index ["status"], name: "index_job_logs_on_status"
+  end
+
   create_table "open_orders", force: :cascade do |t|
     t.date "action_date"
     t.text "action_text"
@@ -88,4 +107,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_14_105334) do
     t.index ["order_status"], name: "index_open_orders_on_order_status"
     t.index ["sales_doc"], name: "index_open_orders_on_sales_doc"
   end
+
+  add_foreign_key "job_log_details", "job_logs"
 end
