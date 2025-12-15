@@ -15,6 +15,9 @@ Rails.application.routes.draw do
   # OpenOrder routes (read-only: index and show only)
   resources :open_orders, only: [ :index, :show ]
 
+  # Mission Control - Jobs dashboard for Solid Queue
+  mount MissionControl::Jobs::Engine, at: "/jobs"
+
   # Set root to open_orders index
   root "open_orders#index"
 end

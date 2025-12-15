@@ -39,3 +39,14 @@ production:
     <<: *default
     database: storage/production_cable.sqlite3
     migrations_paths: db/cable_migrate
+
+# SQL Server connection for SAP data sync
+sqlserver:
+  adapter: sqlserver
+  mode: dblib
+  host: CASQL2.inxintl.com
+  database: ProcessStatus
+  username: zsdOrder8800
+  password: 3~EmX~Kf$}
+  timeout: 30
+  encoding: utf8

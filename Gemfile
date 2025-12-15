@@ -18,6 +18,7 @@ gem "stimulus-rails"
 gem "tailwindcss-rails"
 # Pagination for list views
 gem "kaminari"
+gem "kaminari-tailwind"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
@@ -43,6 +44,12 @@ gem "thruster", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
+
+# SQL Server connectivity for SAP data sync
+gem "tiny_tds", "~> 2.1"
+
+# Mission Control for Solid Queue monitoring
+gem "mission_control-jobs"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

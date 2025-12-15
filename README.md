@@ -5,8 +5,8 @@ A Rails 8 background worker application that syncs OpenOrder data from SAP SQL S
 ## Overview
 
 Platform01 Inside Worker is designed to:
-- Fetch OpenOrder data from SQL Server on a recurring schedule (future feature)
-- Send data to another Rails application via API calls (future feature)
+- **Fetch OpenOrder data from SQL Server** - Recurring background job syncs data from SAP every 5 minutes
+- **Send data to another Rails application via API calls** (future feature)
 - Provide read-only admin interface for viewing OpenOrder data
 
 This application follows the **Platform01 Inside Worker Constitution v1.0.1** which emphasizes Rails conventions, background job architecture, simplicity, and admin-only operations.
@@ -18,8 +18,10 @@ This application follows the **Platform01 Inside Worker Constitution v1.0.1** wh
 
 ## System Dependencies
 
-- SQLite3 (local data storage)
-- SQL Server (external, SAP data source - to be configured)
+- **SQLite3** - Local data storage for synced OpenOrder data
+- **SQL Server** - External SAP data source (CASQL2.inxintl.com)
+- **FreeTDS** - SQL Server connectivity library for TinyTDS
+- **TinyTDS gem** (~> 2.1) - Ruby SQL Server adapter
 - Modern browser with JavaScript enabled
 
 ## Configuration
@@ -36,6 +38,25 @@ ADMIN_PASSWORD=your_secure_password
 Optional:
 - `DATABASE_URL` - Database connection string (defaults to SQLite3)
 - `RAILS_ENV` - Environment (development/production/test)
+- `SQL_SERVER_PASSWORD` - SQL Server password (defaults to value in database.yml)
+
+### SQL Server Configuration
+
+The application connects to SAP SQL Server to fetch OpenOrder data. Configuration is in `config/database.yml`:
+
+```yaml
+sqlserver:
+  adapter: sqlserver
+  mode: dblib
+  host: CASQL2.inxintl.com
+  database: ProcessStatus
+  username: zsdOrder8800
+  password: <%= ENV.fetch('SQL_SERVER_PASSWORD', '3~EmX~Kf$}') %>
+  timeout: 30
+  encoding: utf8
+```
+
+**Note**: Password is stored in config file for firewalled network deployment. For external deployment, use environment variable only.
 
 ### Database Setup
 
@@ -49,6 +70,43 @@ bin/rails db:seed
 ```
 
 ## Features
+
+### SQL Server Data Sync (New!)
+
+Automatic background job that syncs OpenOrder data from SAP SQL Server:
+
+- **Recurring Schedule**: Runs every 5 minutes automatically
+- **Batch Processing**: Processes records in batches of 500 for memory efficiency
+- **Transaction Safety**: Truncates and replaces all data atomically - old data preserved on failure
+- **Explicit Column Mapping**: 67 fields mapped explicitly from SQL Server to Rails (fail-fast approach)
+- **Error Handling**: Comprehensive logging, connection errors don't corrupt data
+- **Status Visibility**: Web interface shows last sync time with color-coded status:
+  - 🟢 **Synced** (< 10 minutes ago)
+  - 🟡 **Stale** (10-30 minutes ago)
+  - 🔴 **Error** (> 30 minutes ago)
+
+#### Manual Sync
+
+Trigger sync manually for testing:
+
+```bash
+bin/rails sync:open_orders
+```
+
+#### Monitoring
+
+Check sync status:
+- Web interface: `/open_orders` shows last sync time and status
+- Logs: `log/development.log` or `log/production.log`
+- Solid Queue dashboard: Check recurring job execution history
+
+#### Troubleshooting
+
+See `specs/002-sqlserver-sync-worker/quickstart.md` for:
+- Connection testing scripts
+- Common error scenarios
+- Performance tuning
+- Emergency procedures
 
 ### OpenOrder View Interface
 
@@ -121,10 +179,11 @@ kamal deploy
 - **Asset Pipeline**: Propshaft
 - **CSS Framework**: Tailwind CSS (tailwindcss-rails gem v4.4.0)
 - **JavaScript**: Hotwire (Turbo + Stimulus)
-- **Background Jobs**: Solid Queue (configured, not yet used)
+- **Background Jobs**: Solid Queue (recurring sync job every 5 minutes)
 - **Caching**: Solid Cache
 - **WebSockets**: Solid Cable
 - **Pagination**: Kaminari v1.2.2
+- **SQL Server**: TinyTDS v2.1 with FreeTDS
 
 ### Database Schema
 
@@ -178,7 +237,7 @@ kamal app exec -i --reuse "bin/rails console"
 ## Future Features
 
 As specified in the constitution, future development includes:
-1. **SQL Server Sync Worker**: Recurring job to fetch data from SAP SQL Server
+1. ~~**SQL Server Sync Worker**: Recurring job to fetch data from SAP SQL Server~~ ✅ **Completed**
 2. **API Integration**: Send synced data to external Rails application
 3. **Data Transformations**: Process and normalize SAP data as needed
 
@@ -190,21 +249,42 @@ app/
 │   └── open_orders_controller.rb    # List, detail, CSV export
 ├── models/
 │   └── open_order.rb                 # ActiveRecord model
+├── jobs/
+│   └── sync_open_orders_job.rb       # SQL Server sync recurring job
+├── services/
+│   ├── sql_server_connector.rb       # TinyTDS connection management
+│   └── open_orders_importer.rb       # Batch import with column mapping
 ├── views/
 │   ├── layouts/
 │   │   └── application.html.erb      # Main layout with Tailwind
 │   ├── open_orders/
-│   │   ├── index.html.erb            # List view
+│   │   ├── index.html.erb            # List view with sync status
 │   │   └── show.html.erb             # Detail view
+│   ├── shared/
+│   │   └── _sync_status.html.erb     # Sync status indicator partial
 │   └── kaminari/                     # Pagination templates
 ├── helpers/
-│   └── open_orders_helper.rb         # Date/quantity formatters
+│   └── open_orders_helper.rb         # Date/quantity/sync formatters
 config/
 ├── routes.rb                         # RESTful routes (index, show)
+├── database.yml                      # SQLite3 + SQL Server configs
+├── recurring.yml                     # Solid Queue job schedule
 └── deploy.yml                        # Kamal deployment config
 db/
 └── migrate/
     └── *_create_open_orders.rb       # Table schema
+lib/
+└── tasks/
+    └── sync.rake                     # Manual sync task
+specs/
+├── 001-openorder-crud/              # OpenOrder CRUD feature docs
+└── 002-sqlserver-sync-worker/       # SQL Server sync feature docs
+    ├── spec.md                       # Feature specification
+    ├── plan.md                       # Implementation plan
+    ├── research.md                   # Technical research
+    ├── data-model.md                 # Column mapping documentation
+    ├── quickstart.md                 # Setup and troubleshooting guide
+    └── tasks.md                      # Implementation tasks
 ```
 
 ## Contributing
@@ -224,5 +304,13 @@ This project follows the **Platform01 Inside Worker Constitution**. Key principl
 ## Documentation
 
 - Constitution: `.specify/memory/constitution.md`
-- OpenOrder Specification: `specs/001-openorder-crud/spec.md`
-- Implementation Tasks: `specs/001-openorder-crud/tasks.md`
+- **Feature 001** - OpenOrder CRUD: `specs/001-openorder-crud/`
+  - Specification: `spec.md`
+  - Implementation Tasks: `tasks.md`
+- **Feature 002** - SQL Server Sync Worker: `specs/002-sqlserver-sync-worker/`
+  - Specification: `spec.md`
+  - Implementation Plan: `plan.md`
+  - Technical Research: `research.md`
+  - Column Mapping: `data-model.md`
+  - Setup & Troubleshooting: `quickstart.md`
+  - Implementation Tasks: `tasks.md`

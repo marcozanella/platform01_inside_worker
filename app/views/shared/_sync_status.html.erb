@@ -1,0 +1,9 @@
+<% status = sync_status %>
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border <%= status[:border_class] %> <%= status[:bg_class] %>">
+  <span class="text-sm font-semibold <%= status[:color_class] %>">
+    <%= status[:icon] %> <%= status[:text] %>
+  </span>
+  <span class="text-xs text-gray-600">
+    <%= format_last_sync_time %>
+  </span>
+</div>

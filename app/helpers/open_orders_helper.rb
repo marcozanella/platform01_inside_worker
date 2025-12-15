@@ -69,4 +69,61 @@ module OpenOrdersHelper
 
     current_direction == "asc" ? "↑" : "↓"
   end
+
+  # Format last sync timestamp with time ago
+  # Returns formatted string with absolute time and relative time
+  def format_last_sync_time
+    last_sync = OpenOrder.maximum(:updated_at)
+    return "Never synced" unless last_sync
+
+    "#{time_ago_in_words(last_sync)} ago (#{last_sync.strftime('%b %d, %Y at %I:%M %p')})"
+  end
+
+  # Get sync status based on last sync time
+  # Returns hash with status (:synced, :stale, :error) and CSS classes
+  def sync_status
+    last_sync = OpenOrder.maximum(:updated_at)
+
+    unless last_sync
+      return {
+        status: :error,
+        text: "Never synced",
+        icon: "✗",
+        color_class: "text-red-600",
+        bg_class: "bg-red-50",
+        border_class: "border-red-200"
+      }
+    end
+
+    minutes_since_sync = ((Time.current - last_sync) / 60).to_i
+
+    if minutes_since_sync < 10
+      {
+        status: :synced,
+        text: "Synced",
+        icon: "✓",
+        color_class: "text-green-600",
+        bg_class: "bg-green-50",
+        border_class: "border-green-200"
+      }
+    elsif minutes_since_sync < 30
+      {
+        status: :stale,
+        text: "Stale",
+        icon: "⚠",
+        color_class: "text-yellow-600",
+        bg_class: "bg-yellow-50",
+        border_class: "border-yellow-200"
+      }
+    else
+      {
+        status: :error,
+        text: "Error",
+        icon: "✗",
+        color_class: "text-red-600",
+        bg_class: "bg-red-50",
+        border_class: "border-red-200"
+      }
+    end
+  end
 end
