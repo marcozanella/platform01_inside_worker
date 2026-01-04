@@ -390,7 +390,16 @@ GEM
     thruster (0.1.16-x86_64-darwin)
     thruster (0.1.16-x86_64-linux)
     timeout (0.5.0)
-    tiny_tds (2.1.7)
+    tiny_tds (3.4.0)
+      bigdecimal (>= 2.0.0)
+    tiny_tds (3.4.0-aarch64-linux-gnu)
+      bigdecimal (>= 2.0.0)
+    tiny_tds (3.4.0-aarch64-linux-musl)
+      bigdecimal (>= 2.0.0)
+    tiny_tds (3.4.0-x86_64-linux-gnu)
+      bigdecimal (>= 2.0.0)
+    tiny_tds (3.4.0-x86_64-linux-musl)
+      bigdecimal (>= 2.0.0)
     tsort (0.2.0)
     turbo-rails (2.0.20)
       actionpack (>= 7.1.0)
@@ -453,7 +462,7 @@ DEPENDENCIES
   stimulus-rails
   tailwindcss-rails
   thruster
-  tiny_tds (~> 2.1)
+  tiny_tds (~> 3.4)
   turbo-rails
   tzinfo-data
   web-console
@@ -611,7 +620,11 @@ CHECKSUMS
   thruster (0.1.16-x86_64-darwin) sha256=1a239fceea8236f954d52b52cd47d574c8c0f8bd7b6471254f7b546512719292
   thruster (0.1.16-x86_64-linux) sha256=775762f0e96ce5e300b60fdedb7a73c89d2fbaef6e9cf730f32008f6fd67396d
   timeout (0.5.0) sha256=852aefd13f41d84c2d0d83099b275034c6517395884b58e635acc8847c9190cb
-  tiny_tds (2.1.7) sha256=b541451a13a1526ef9772ef1aa804d683b6c32399a470d26e6b78e16e92b6adb
+  tiny_tds (3.4.0) sha256=b43e1475cc4b2fa6674847a6a5b72aed99d3332840e1a9f195ca8b1f68653688
+  tiny_tds (3.4.0-aarch64-linux-gnu) sha256=2bfad37bfd894b520e7998dbdc6811fbe7a9f40b4803d30b1307aca3e777fc39
+  tiny_tds (3.4.0-aarch64-linux-musl) sha256=a5ef22dde32998dcba1b75e17bb6419ea80dd52b8bc17d152a8aa6c96f26663d
+  tiny_tds (3.4.0-x86_64-linux-gnu) sha256=56a25e44e8c71432c1e69577cb56893048a949efa7fd839a48efaec88e603b2e
+  tiny_tds (3.4.0-x86_64-linux-musl) sha256=7516c187158215a0a47e3bb1f0dc8794359f6896a284a5ad1140d395461f2b99
   tsort (0.2.0) sha256=9650a793f6859a43b6641671278f79cfead60ac714148aabe4e3f0060480089f
   turbo-rails (2.0.20) sha256=cbcbb4dd3ce59f6471c9f911b1655b2c721998cc8303959d982da347f374ea95
   tzinfo (2.0.6) sha256=8daf828cc77bcf7d63b0e3bdb6caa47e2272dcfaf4fbfe46f8c3a9df087a829b
